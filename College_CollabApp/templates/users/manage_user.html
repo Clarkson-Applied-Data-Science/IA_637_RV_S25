@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="admin-page">
+  <h2 class="admin-heading">👥 Admin View: Manage Users</h2>
+
+  {% if not obj.data %}
+    <p class="info-text">No users available.</p>
+  {% else %}
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for obj in obj.data %}
+        <tr>
+          <td>{{ obj.email }}</td>
+          <td>{{ obj.user_name }}</td>
+          <td><span class="role-badge">{{ obj.role }}</span></td>
+          <td><span class="status-badge {{ obj.status }}">{{ obj.status.capitalize() }}</span></td>
+          <td>
+            <form action="/users/update_status" method="POST" class="inline-form">
+              <input type="hidden" name="user_id" value="{{ obj.user_id }}">
+
+              <button type="submit" name="status" value="active"
+                      class="btn-small"
+                      {% if obj.status == 'active' %}disabled{% endif %}>
+                Approve
+              </button>
+
+              <button type="submit" name="status" value="rejected"
+                      class="btn-small btn-danger"
+                      {% if obj.status == 'rejected' %}disabled{% endif %}>
+                Reject
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</div>
+
+{% endblock %}
